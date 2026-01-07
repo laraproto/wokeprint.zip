@@ -4,6 +4,7 @@
 	import { KeyRound } from '@lucide/svelte';
 	import { SiGithub } from '@icons-pack/svelte-simple-icons';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import { toast } from 'svelte-sonner';
 
 	import { authClient } from '$lib/auth-client';
 
@@ -61,7 +62,21 @@
 			</NavigationMenu.Item>
 			<p>Or</p>
 			<NavigationMenu.Item>
-				<Button><KeyRound /><span>Passkey</span></Button>
+				<Button
+					onclick={async () => {
+						await authClient.signIn.passkey({
+							autoFill: true,
+							fetchOptions: {
+								onSuccess() {
+									toast('Signed in using a passkey');
+								},
+								onError(context) {
+									toast.error(`Error signing in using a passkey: ${context.message}`);
+								}
+							}
+						});
+					}}><KeyRound /><span>Passkey</span></Button
+				>
 			</NavigationMenu.Item>
 		{/if}
 	</NavigationMenu.List>

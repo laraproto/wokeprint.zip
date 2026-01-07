@@ -55,7 +55,10 @@
 		"@better-auth/passkey": "^1.4.10",
 		"@icons-pack/svelte-simple-icons": "^6.5.0",
 		"@libsql/client": "^0.17.0",
+		"@trpc/client": "^11.8.1",
+		"@trpc/server": "^11.8.1",
 		"better-auth": "^1.4.10",
-		"mode-watcher": "^1.1.0"
+		"mode-watcher": "^1.1.0",
+		"zod": "^4.3.5"
 	}
 }

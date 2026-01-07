@@ -1,5 +1,13 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index.js';
+	import { trpcClient } from '$lib/trpc-client';
+	import { onMount } from 'svelte';
+
+	onMount(async () => {
+		const result = await trpcClient.hello.query();
+
+		console.log(result);
+	});
 </script>
 
 <div class="container flex flex-1 justify-center overflow-auto px-4 py-4">

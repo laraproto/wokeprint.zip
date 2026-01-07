@@ -5,5 +5,10 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
-	optimizeDeps: { exclude: ['better-auth', '@better-auth/passkey'] }
+	optimizeDeps: { exclude: ['better-auth', '@better-auth/passkey'] },
+	server: {
+		cors: {
+			origin: ['https://localhost', 'http://localhost']
+		}
+	}
 });
