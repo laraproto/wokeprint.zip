@@ -1,4 +1,6 @@
 import { router, publicProcedure, authedProcedure } from '../trpc';
+import { adminRouter } from './admin';
+import { userRouter } from './user';
 
 export const appRouter = router({
 	hello: publicProcedure.query(({ ctx }) => {
@@ -6,7 +8,9 @@ export const appRouter = router({
 	}),
 	canAdmin: authedProcedure.query(({ ctx }) => {
 		return ctx.user!.isAdmin;
-	})
+	}),
+	admin: adminRouter,
+	user: userRouter
 });
 
 // Export type router type signature,

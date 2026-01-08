@@ -1,0 +1,18 @@
+---
+providers:
+  config:
+    class: octodns.provider.yaml.YamlProvider
+    directory: ./octodns-config
+    default_ttl: 300
+  cloudflare:
+    class: octodns_cloudflare.CloudflareProvider
+    token: env/CLOUDFLARE_TOKEN
+    account_id: env/CLOUDFLARE_ACCOUNT_ID
+
+# hardcoded, as this repo is literally called wokeprint.zip
+zones:
+  'wokeprint.zip.':
+    sources:
+      - config
+    targets:
+      - cloudflare

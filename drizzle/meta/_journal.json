@@ -15,6 +15,13 @@
       "when": 1767797721813,
       "tag": "0001_chemical_major_mapleleaf",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1767811885420,
+      "tag": "0002_windy_wolfpack",
+      "breakpoints": true
     }
   ]
 }

@@ -1,5 +1,6 @@
 import { relations, sql } from 'drizzle-orm';
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
+import { domains } from './schema';
 
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
@@ -112,7 +113,8 @@ export const passkey = sqliteTable(
 export const userRelations = relations(user, ({ many }) => ({
 	sessions: many(session),
 	accounts: many(account),
-	passkeys: many(passkey)
+	passkeys: many(passkey),
+	domains: many(domains)
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
