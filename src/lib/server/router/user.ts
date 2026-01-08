@@ -86,7 +86,8 @@ export const userRouter = router({
 			if (!domain) {
 				return {
 					success: false,
-					message: 'Domain not found'
+					message: 'Domain not found',
+					domain: null
 				};
 			}
 
@@ -98,7 +99,8 @@ export const userRouter = router({
 			console.error(err);
 			return {
 				success: false,
-				message: 'Prod blew up'
+				message: 'Prod blew up',
+				domain: null
 			};
 		}
 	}),
@@ -116,7 +118,8 @@ export const userRouter = router({
 			console.error(err);
 			return {
 				success: false,
-				message: 'Something went wrong finding your domains or the database is dead'
+				message: 'Something went wrong finding your domains or the database is dead',
+				domains: null
 			};
 		}
 	}),
@@ -194,7 +197,10 @@ export const userRouter = router({
 					where: and(
 						eq(schema.domains.id, input.domainId),
 						eq(schema.domains.ownerId, ctx.user!.id)
-					)
+					),
+					with: {
+						records: true
+					}
 				});
 
 				if (!domain) {
@@ -202,6 +208,15 @@ export const userRouter = router({
 						success: false,
 						message: 'Domain not found'
 					};
+				}
+
+				for await (const record of domain.records) {
+					if (record.type === input.type) {
+						return {
+							success: false,
+							message: `Record of type ${input.type} already exists for this domain, use comma delimited values on the first record instead`
+						};
+					}
 				}
 
 				const insertRecord = await db

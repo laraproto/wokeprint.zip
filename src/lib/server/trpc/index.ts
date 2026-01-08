@@ -1,5 +1,6 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import type { schema } from '../db';
+import { db, schema } from '../db';
+import { eq } from 'drizzle-orm';
 
 interface TRPCContext {
 	user: typeof schema.user.$inferSelect | null;
@@ -26,7 +27,11 @@ export const authedProcedure = publicProcedure.use(async (opts) => {
 export const adminProcedure = authedProcedure.use(async (opts) => {
 	const { ctx } = opts;
 
-	if (!ctx.user!.isAdmin) {
+	const user = await db.query.user.findFirst({
+		where: eq(schema.user.id, ctx.user!.id)
+	});
+
+	if (!user?.isAdmin) {
 		throw new TRPCError({ code: 'FORBIDDEN', message: 'User is not an admin' });
 	}
 

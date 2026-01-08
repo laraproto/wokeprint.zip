@@ -7,11 +7,19 @@
 	import { goto } from '$app/navigation';
 
 	let domains = $state<
-		Array<{ subdomain: string; approved: boolean; createdAt: string | null; id: string }>
+		Array<{
+			subdomain: string;
+			approved: boolean;
+			createdAt: string | null;
+			id: string;
+			ownerId: string;
+		}>
 	>([]);
 
 	const requestDomains = async () => {
-		const result = await trpcClient.user.getDomains.query();
+		const result = await trpcClient.admin.listDomains.query({
+			showApproved: false
+		});
 		if (result.success) {
 			domains = result.domains!;
 		}
@@ -26,10 +34,7 @@
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>Domains</Card.Title>
-			<Card.Description>All your domains should be listed here</Card.Description>
-			<Card.Action>
-				<Button href="/domains/add">Add Domain</Button>
-			</Card.Action>
+			<Card.Description>You can only approve</Card.Description>
 		</Card.Header>
 		<Card.Content>
 			{#if domains}
@@ -49,16 +54,16 @@
 								<Table.Cell>{domain.approved ? 'Yes' : 'No'}</Table.Cell>
 								<Table.Cell>{domain.createdAt}</Table.Cell>
 								<Table.Cell class="text-end">
-									<Button variant="secondary" href={`/domains/${domain.id}`} size="sm"
-										>Manage</Button
-									>
 									<Button
-										variant="destructive"
+										variant="secondary"
 										size="sm"
 										onclick={async () => {
-											await trpcClient.user.deleteSubdomain.mutate({ domainId: domain.id });
+											await trpcClient.admin.approveDomain.mutate({
+												domainId: domain.id,
+												userId: domain.ownerId
+											});
 											await requestDomains();
-										}}>Delete</Button
+										}}>Approve</Button
 									>
 								</Table.Cell>
 							</Table.Row>

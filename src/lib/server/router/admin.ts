@@ -5,11 +5,39 @@ import { and, eq } from 'drizzle-orm';
 import { buildOctoDNSConfig } from '../octodns';
 
 export const adminRouter = router({
+	listDomains: adminProcedure
+		.input(
+			z.object({
+				showApproved: z.boolean().default(false)
+			})
+		)
+		.query(async ({ input }) => {
+			try {
+				const domains = await db.query.domains.findMany({
+					where: input.showApproved ? undefined : eq(schema.domains.approved, false),
+					orderBy: (domain, { desc }) => [desc(domain.createdAt)]
+				});
+
+				console.log(domains);
+
+				return {
+					success: true,
+					domains
+				};
+			} catch (err) {
+				console.error(err);
+				return {
+					success: false,
+					message: 'Something went wrong fetching domains',
+					domains: null
+				};
+			}
+		}),
 	approveDomain: adminProcedure
 		.input(
 			z.object({
 				domainId: z.uuidv7(),
-				userId: z.uuidv7()
+				userId: z.string()
 			})
 		)
 		.mutation(async ({ input }) => {
