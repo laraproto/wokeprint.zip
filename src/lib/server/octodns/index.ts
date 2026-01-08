@@ -32,7 +32,7 @@ export const buildOctoDNSConfig = async () => {
 		}
 	});
 
-	const config: OctoDNSConfig = {};
+	const config: OctoDNSConfig = { "''": [{ type: 'A', values: ['188.245.90.208'] }] };
 
 	for await (const domain of domains) {
 		config[domain.subdomain] = domain.records.map((record) => ({

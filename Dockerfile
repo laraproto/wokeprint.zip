@@ -9,7 +9,9 @@ FROM oven/bun:1.3-debian AS main
 EXPOSE 3000
 
 WORKDIR /app
-COPY --from=build /app/build ./build
+COPY --from=build /app .
+
+RUN bun i
 
 RUN apt-get update && apt-get install -y python3-pip
 
